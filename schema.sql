@@ -1,0 +1,14 @@
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+platform VARCHAR(50),
+username VARCHAR(255),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE roasts (
+id SERIAL PRIMARY KEY,
+user_id INT,
+roast_text TEXT,
+score INT,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
