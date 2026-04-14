@@ -1,21 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>RoastMyTaste</title>
-<link rel="stylesheet" href="style.css">
-</head>
+    <head>
+        <title>RoastMyTaste</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    </head>
 
-<body>
-<h1>RoastMyTaste</h1>
-<h2>We analyze your taste.
-Then we roast it.
-Hard.</h2>
+    <body>
+        <h1>RoastMyTaste</h1>
+        <h2>We analyze your taste. Then we roast it. Hard.</h2>
 
-<button>Spotify</button>
-<button>GitHub</button>
-<button>Chess</button>
+        <div class="container">
+            <button type="button" data-input="spotify">Spotify</button>
+            <button type="button" data-input="github">GitHub</button>
+            <button type="button" data-input="chess">Chess</button>
+        </div>
 
-<script src="script.js"></script>
+        <div class="dropdown">
+            <button type="button" class="dropdown-toggle" id="tone-toggle" aria-expanded="false">Select a tone</button>
+            <div class="dropdown-menu" id="tone-menu" hidden>
+                <button type="button" class="dropdown-item">Roast</button>
+                <button type="button" class="dropdown-item">Friendly</button>
+                <button type="button" class="dropdown-item">Meme style</button>
+            </div>
+        </div>
 
-</body>
+        <div id="button-inputs">
+            <div class="service-row" id="spotify-row" aria-hidden="true">
+                <div class="input-box" id="spotify-input">
+                    <input type="text" placeholder="Enter your spotify username">
+                </div>
+                <div class="service-roast-wrapper">
+                    <button type="button" class="service-roast-button" data-service="spotify">Roast My Spotify</button>
+                </div>
+            </div>
+            <div class="service-row" id="github-row" aria-hidden="true">
+                <div class="input-box" id="github-input">
+                    <input type="text" placeholder="Enter your github username">
+                </div>
+                <div class="service-roast-wrapper">
+                    <button type="button" class="service-roast-button" data-service="github">Roast My GitHub</button>
+                </div>
+            </div>
+            <div class="service-row" id="chess-row" aria-hidden="true">
+                <div class="input-box" id="chess-input">
+                    <input type="text" placeholder="Enter your chess.com username">
+                </div>
+                <div class="service-roast-wrapper">
+                    <button type="button" class="service-roast-button" data-service="chess">Roast My Chess</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
 </html>
