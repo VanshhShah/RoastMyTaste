@@ -106,3 +106,14 @@ document.addEventListener('click', (event) => {
     closeMenu();
   }
 });
+
+serviceRoastButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const service = button.dataset.service;
+
+    if (service === "spotify") {
+      window.location.href = "http://localhost:5000/login";
+    }
+
+  });
+});
