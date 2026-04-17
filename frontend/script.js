@@ -114,6 +114,36 @@ serviceRoastButtons.forEach(button => {
     if (service === "spotify") {
       window.location.href = "http://localhost:5000/login";
     }
+    if (service === "chess") {
+      const username = document.querySelector("#chess-input input").value;
 
+      document.getElementById("roast-text").textContent = "Roasting...";
+      document.getElementById("roast-output").style.display = "block";
+
+      fetch(`http://localhost:5000/chess/${username}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("roast-output").style.display = "block";
+          typeWriter(document.getElementById("roast-text"), data.roast, 15);
+        })
+        .catch(() => alert("Invalid username"));
+    }
   });
 });
+
+function typeWriter(element, text) {
+  element.textContent = "";
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+
+      let speed = i < 80 ? 30 : 50;
+      setTimeout(typing, speed);
+    }
+  }
+
+  typing();
+}
