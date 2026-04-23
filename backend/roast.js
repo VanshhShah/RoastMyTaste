@@ -19,6 +19,9 @@ Be specific and make fun of patterns like low stars, no followers, empty bio, et
 If github profile is weak (low repos, low stars), be extra brutal.
 If strong, roast ego and overengineering.
 
+
+If platform is "valorant":
+Roast their rank, RR, account level, and aim like a toxic teammate.
 User Data:
 ${JSON.stringify(data, null, 2)}
 

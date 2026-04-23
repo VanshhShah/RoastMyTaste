@@ -192,3 +192,26 @@ function typeWriter(element, text) {
 
   typing();
 }
+
+if (service === "valorant") {
+  const input = document.querySelector("#valorant-input input").value;
+
+  const parts = input.split("#");
+  if (parts.length !== 2) {
+    alert("Enter RiotID#Tag");
+    return;
+  }
+
+  const name = parts[0];
+  const tag = parts[1];
+
+  document.getElementById("roast-output").style.display = "block";
+  document.getElementById("roast-text").textContent = "Roasting...";
+
+  fetch(`http://localhost:5000/valorant/${name}/${tag}?tone=${selectedTone}`)
+    .then(res => res.json())
+    .then(data => {
+      typeWriter(document.getElementById("roast-text"), data.roast);
+    })
+    .catch(() => alert("Invalid Riot ID / Tag"));
+}
