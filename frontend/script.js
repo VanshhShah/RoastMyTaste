@@ -1,6 +1,7 @@
 const toggle = document.getElementById('tone-toggle');
 const menu = document.getElementById('tone-menu');
 const items = document.querySelectorAll('.dropdown-item');
+let selectedTone = "Roast"; // default
 
 const closeMenu = () => {
   menu.hidden = true;
@@ -20,7 +21,8 @@ toggle.addEventListener('click', (event) => {
 items.forEach(item => {
   item.addEventListener('click', (event) => {
     event.stopPropagation();
-    toggle.textContent = event.target.textContent;
+    selectedTone = event.target.textContent;
+    toggle.textContent = selectedTone;
     closeMenu();
   });
 });
@@ -114,20 +116,63 @@ serviceRoastButtons.forEach(button => {
     if (service === "spotify") {
       window.location.href = "http://localhost:5000/login";
     }
-    if (service === "chess") {
+    else if (service === "chess") {
       const username = document.querySelector("#chess-input input").value;
 
       document.getElementById("roast-text").textContent = "Roasting...";
       document.getElementById("roast-output").style.display = "block";
 
-      fetch(`http://localhost:5000/chess/${username}`)
+      fetch(`http://localhost:5000/chess/${username}?tone=${selectedTone}`)
         .then(res => res.json())
         .then(data => {
           document.getElementById("roast-output").style.display = "block";
           typeWriter(document.getElementById("roast-text"), data.roast, 15);
         })
         .catch(() => alert("Invalid username"));
-    }
+    } 
+    else if (service === "github") {
+  const username = document.querySelector("#github-input input").value;
+
+  // show loading
+  document.getElementById("roast-output").style.display = "block";
+  document.getElementById("roast-text").textContent = "Roasting...";
+
+  fetch(`http://localhost:5000/github/${username}?tone=${selectedTone}`)
+    .then(res => res.json())
+    .then(data => {
+
+      const stats = data.data;
+
+      // ✅ Show GitHub stats
+      const statsBox = document.getElementById("github-stats");
+      if (statsBox) {
+        statsBox.style.display = "block";
+
+        document.getElementById("gh-followers").textContent =
+          `Followers: ${stats.followers}`;
+
+        document.getElementById("gh-repos").textContent =
+          `Repos: ${stats.public_repos}`;
+
+        document.getElementById("gh-stars").textContent =
+          `Stars: ${stats.total_stars}`;
+      }
+
+      // ✅ Show avatar if exists
+      const avatar = document.getElementById("gh-avatar");
+      if (avatar && stats.avatar) {
+        avatar.src = stats.avatar;
+        avatar.style.display = "block";
+      }
+
+      // ✅ Typewriter roast
+      typeWriter(document.getElementById("roast-text"), data.roast);
+
+    })
+    .catch(() => {
+      alert("Invalid GitHub username");
+    });
+}
   });
 });
 

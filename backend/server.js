@@ -2,8 +2,9 @@ const express = require("express");
 const cors = require("cors");
 
 const spotify = require("./spotify");
-const getChessData = require("./chess");       // ✅ added
-const generateRoast = require("./roast");      // ✅ added
+const getChessData = require("./chess");      
+const generateRoast = require("./roast");
+const getGithubData = require("./github");
 
 const app = express();
 
@@ -29,6 +30,27 @@ app.get("/chess/:username", async (req, res) => {
         data.bullet_rating
       ),
       mode: "chess",
+    });
+
+    res.json({ data, roast });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get("/github/:username", async (req, res) => {
+  
+  try {
+    const data = await getGithubData(req.params.username);
+
+    const roast = await generateRoast({
+      platform: "github",
+      username: data.username,
+      followers: data.followers,
+      following: data.following,
+      repos: data.public_repos,
+      stars: data.total_stars,
+      bio: data.bio
     });
 
     res.json({ data, roast });
