@@ -131,48 +131,77 @@ serviceRoastButtons.forEach(button => {
         .catch(() => alert("Invalid username"));
     } 
     else if (service === "github") {
-  const username = document.querySelector("#github-input input").value;
+      const username = document.querySelector("#github-input input").value;
 
-  // show loading
-  document.getElementById("roast-output").style.display = "block";
-  document.getElementById("roast-text").textContent = "Roasting...";
+      // show loading
+      document.getElementById("roast-output").style.display = "block";
+      document.getElementById("roast-text").textContent = "Roasting...";
 
-  fetch(`http://localhost:5000/github/${username}?tone=${selectedTone}`)
-    .then(res => res.json())
-    .then(data => {
+      fetch(`http://localhost:5000/github/${username}?tone=${selectedTone}`)
+      .then(res => res.json())
+      .then(data => {
 
-      const stats = data.data;
+        const stats = data.data;
 
-      // ✅ Show GitHub stats
-      const statsBox = document.getElementById("github-stats");
-      if (statsBox) {
-        statsBox.style.display = "block";
+        // ✅ Show GitHub stats
+        const statsBox = document.getElementById("github-stats");
+        if (statsBox) {
+          statsBox.style.display = "block";
 
-        document.getElementById("gh-followers").textContent =
-          `Followers: ${stats.followers}`;
+          document.getElementById("gh-followers").textContent =
+            `Followers: ${stats.followers}`;
 
-        document.getElementById("gh-repos").textContent =
-          `Repos: ${stats.public_repos}`;
+          document.getElementById("gh-repos").textContent =
+            `Repos: ${stats.public_repos}`;
 
-        document.getElementById("gh-stars").textContent =
-          `Stars: ${stats.total_stars}`;
+          document.getElementById("gh-stars").textContent =
+            `Stars: ${stats.total_stars}`;
+        }
+
+        // ✅ Show avatar if exists
+        const avatar = document.getElementById("gh-avatar");
+        if (avatar && stats.avatar) {
+          avatar.src = stats.avatar;
+          avatar.style.display = "block";
+        }
+
+        // ✅ Typewriter roast
+        typeWriter(document.getElementById("roast-text"), data.roast);
+      })
+      .catch(() => {
+        alert("Invalid GitHub username");
+      });
+    }
+    else if (service === "valorant") {
+      const input = document.querySelector("#valorant-input input").value;
+
+      const parts = input.split("#");
+      if (parts.length !== 2) {
+        alert("Enter RiotID#Tag");
+        return;
       }
 
-      // ✅ Show avatar if exists
-      const avatar = document.getElementById("gh-avatar");
-      if (avatar && stats.avatar) {
-        avatar.src = stats.avatar;
-        avatar.style.display = "block";
-      }
+      const name = parts[0];
+      const tag = parts[1];
 
-      // ✅ Typewriter roast
-      typeWriter(document.getElementById("roast-text"), data.roast);
+      document.getElementById("roast-output").style.display = "block";
+      document.getElementById("roast-text").textContent = "Roasting...";
 
-    })
-    .catch(() => {
-      alert("Invalid GitHub username");
-    });
-}
+      fetch(`http://localhost:5000/valorant/${name}/${tag}?tone=${selectedTone}`)
+        .then(async res => {
+          const data = await res.json();
+
+          if (!res.ok) throw new Error(data.error);
+
+          return data;
+        })
+        .then(data => {
+          typeWriter(document.getElementById("roast-text"), data.roast);
+        })
+        .catch(err => {
+          alert(err.message);
+        });
+    }
   });
 });
 
@@ -191,27 +220,4 @@ function typeWriter(element, text) {
   }
 
   typing();
-}
-
-if (service === "valorant") {
-  const input = document.querySelector("#valorant-input input").value;
-
-  const parts = input.split("#");
-  if (parts.length !== 2) {
-    alert("Enter RiotID#Tag");
-    return;
-  }
-
-  const name = parts[0];
-  const tag = parts[1];
-
-  document.getElementById("roast-output").style.display = "block";
-  document.getElementById("roast-text").textContent = "Roasting...";
-
-  fetch(`http://localhost:5000/valorant/${name}/${tag}?tone=${selectedTone}`)
-    .then(res => res.json())
-    .then(data => {
-      typeWriter(document.getElementById("roast-text"), data.roast);
-    })
-    .catch(() => alert("Invalid Riot ID / Tag"));
 }

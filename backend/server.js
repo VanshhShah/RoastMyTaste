@@ -71,15 +71,12 @@ app.get("/valorant/:name/:tag", async (req, res) => {
 
     const roast = await generateRoast({
       platform: "valorant",
-      tone: tone,
-      username: data.username,
-      level: data.level,
-      rank: data.rank,
-      rr: data.rr,
-      elo: data.elo
+      tone,
+      ...data
     });
 
     res.json({ data, roast });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
