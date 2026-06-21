@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const supabase = require("./supabase");
+
 
 const spotify = require("./spotify");
 const getChessData = require("./chess");      
