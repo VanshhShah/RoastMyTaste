@@ -10,6 +10,61 @@ const closeMenu = () => {
   toggle.setAttribute('aria-expanded', 'false');
 };
 
+// Spawn a floating fire emoji at the given viewport coordinates
+let fireStormInterval = null;
+
+function spawnFireParticle() {
+
+  const fire = document.createElement("span");
+
+  fire.className = "floating-emoji";
+  fire.textContent = "🔥";
+
+  const size = Math.random() * 60 + 20;
+
+  fire.style.left =
+    `${Math.random() * window.innerWidth}px`;
+
+  fire.style.fontSize = `${size}px`;
+
+  fire.style.setProperty(
+    "--drift",
+    `${(Math.random() - 0.5) * 250}px`
+  );
+
+  fire.style.animationDuration =
+    `${Math.random() * 4 + 4}s`;
+
+  document.body.prepend(fire);
+
+  fire.addEventListener(
+    "animationend",
+    () => fire.remove(),
+    { once: true }
+  );
+}
+
+function startFireStorm() {
+
+  if (fireStormInterval) return;
+
+  fireStormInterval = setInterval(() => {
+
+    const count = Math.floor(Math.random() * 2) + 1;
+
+    for (let i = 0; i < count; i++) {
+      spawnFireParticle();
+    }
+
+  }, 150);
+}
+
+function stopFireStorm() {
+
+  clearInterval(fireStormInterval);
+  fireStormInterval = null;
+}
+
 const openMenu = () => {
   menu.hidden = false;
   toggle.setAttribute('aria-expanded', 'true');
@@ -88,7 +143,7 @@ buttons.forEach(button => {
 });
 
 serviceRoastButtons.forEach(button => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', (event) => {
     const service = button.dataset.service;
     const input = document.querySelector(`#${service}-input input`);
     if (input) {
@@ -112,7 +167,15 @@ document.addEventListener('click', (event) => {
 });
 
 serviceRoastButtons.forEach(button => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', (event) => {
+    // show a burst of floating fires from bottom when Roast tone is selected
+    if (
+      selectedTone &&
+      selectedTone.toLowerCase() === "roast"
+    ) {
+      startFireStorm();
+    }
+
     const service = button.dataset.service;
 
     if (service === "spotify") {
@@ -127,8 +190,16 @@ serviceRoastButtons.forEach(button => {
       fetch(`${API_URL}/chess/${username}?tone=${selectedTone}`)
         .then(res => res.json())
         .then(data => {
+
+          stopFireStorm();
+
           document.getElementById("roast-output").style.display = "block";
-          typeWriter(document.getElementById("roast-text"), data.roast, 15);
+
+          typeWriter(
+            document.getElementById("roast-text"),
+            data.roast,
+            15
+          );
         })
         .catch(() => alert("Invalid username"));
     } 

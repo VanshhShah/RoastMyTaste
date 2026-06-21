@@ -3,7 +3,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* min-height: 100vh; content in center of screen */
+    position: relative;
+    overflow-x: hidden;
 }
 
 h1 {
@@ -63,6 +64,9 @@ button {
     width: 100%;
     gap: 18px;
     margin-top: 10px;
+
+    position: relative;
+    z-index: 1;
 }
 
 .service-row {
@@ -75,6 +79,8 @@ button {
 
 .service-row.active {
     display: flex;
+    position: relative;
+    z-index: 1;
 }
 
 .service-roast-button {
@@ -156,6 +162,7 @@ button {
 .dropdown {
     position: relative;
     margin: 12px 0;
+    z-index: 1000;
 }
 
 .dropdown-toggle {
@@ -190,28 +197,45 @@ button {
 
 .dropdown-menu {
     position: absolute;
+
     top: calc(100% + 8px);
+
     left: 50%;
     transform: translateX(-50%);
-    min-width: 100%;
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    width: 140px;
+
+    background: rgba(20,20,20,0.95);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 18px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-    padding: 6px 0;
-    z-index: 10;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 12px 25px rgba(0,0,0,0.4);
+
+    z-index: 9999;
+}
+
+.dropdown-menu[hidden] {
+    display: none;
 }
 
 .dropdown-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    font-family: Oswald, sans-serif;
-    color: #f7f7f7;
-    background: rgba(255, 255, 255, 0.04);
-    border: none;
-    padding: 12px 18px;
+    padding: 10px 14px;
     text-align: center;
+    font-family: Oswald, sans-serif;
+    font-size: 14px;
+    color: white;
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .dropdown-item:hover,
@@ -248,4 +272,46 @@ button {
 @keyframes blink {
   0%, 50%, 100% { opacity: 1; }
   25%, 75% { opacity: 0; }
+}
+
+.floating-emoji {
+    position: fixed;
+    bottom: -120px;
+    pointer-events: none;
+
+    z-index: 1;
+
+    opacity: 0.55;
+
+    filter:
+        drop-shadow(0 0 8px rgba(255,120,0,0.7))
+        drop-shadow(0 0 20px rgba(255,80,0,0.4));
+
+    animation: riseFire linear forwards;
+}
+
+@keyframes riseFire {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(0)
+            translateX(0)
+            scale(0.7);
+    }
+
+    10% {
+        opacity: 0.55;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translateY(-120vh)
+            translateX(var(--drift))
+            scale(1.15)
+            rotate(20deg);
+    }
 }
