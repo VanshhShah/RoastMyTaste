@@ -13,7 +13,7 @@ async function getGithubData(username){
         return {
             username: user.login,
             followers: user.followers,
-            following: user.followers,
+            following: user.following,
             public_repos: user.public_repos,
             total_stars: totalStars,
             bio: user.bio || "no bio"

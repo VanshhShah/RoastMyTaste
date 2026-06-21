@@ -19,8 +19,11 @@ app.get("/callback", spotify.callback);
 app.get("/chess/:username", async (req, res) => {
   try {
     const data = await getChessData(req.params.username);
-
+    const tone = req.query.tone || "Roast";
+    
     const roast = await generateRoast({
+      platform:"chess",
+      username: req.params.username,
       rating: data.rapid_rating || data.blitz_rating,
       wins: data.wins,
       losses: data.losses,
