@@ -3,6 +3,8 @@ const menu = document.getElementById('tone-menu');
 const items = document.querySelectorAll('.dropdown-item');
 let selectedTone = "Roast"; // default
 
+const API_URL = "https://roastmytaste.onrender.com"; 
+
 const closeMenu = () => {
   menu.hidden = true;
   toggle.setAttribute('aria-expanded', 'false');
@@ -114,7 +116,7 @@ serviceRoastButtons.forEach(button => {
     const service = button.dataset.service;
 
     if (service === "spotify") {
-      window.location.href = "http://localhost:5000/login";
+      window.location.href = `${API_URL}/login`;
     }
     else if (service === "chess") {
       const username = document.querySelector("#chess-input input").value;
@@ -122,7 +124,7 @@ serviceRoastButtons.forEach(button => {
       document.getElementById("roast-text").textContent = "Roasting...";
       document.getElementById("roast-output").style.display = "block";
 
-      fetch(`http://localhost:5000/chess/${username}?tone=${selectedTone}`)
+      fetch(`${API_URL}/chess/${username}?tone=${selectedTone}`)
         .then(res => res.json())
         .then(data => {
           document.getElementById("roast-output").style.display = "block";
@@ -133,39 +135,28 @@ serviceRoastButtons.forEach(button => {
     else if (service === "github") {
       const username = document.querySelector("#github-input input").value;
 
-      // show loading
       document.getElementById("roast-output").style.display = "block";
       document.getElementById("roast-text").textContent = "Roasting...";
 
-      fetch(`http://localhost:5000/github/${username}?tone=${selectedTone}`)
+      fetch(`${API_URL}/github/${username}?tone=${selectedTone}`)
       .then(res => res.json())
       .then(data => {
-
         const stats = data.data;
 
-        // ✅ Show GitHub stats
         const statsBox = document.getElementById("github-stats");
         if (statsBox) {
           statsBox.style.display = "block";
-
-          document.getElementById("gh-followers").textContent =
-            `Followers: ${stats.followers}`;
-
-          document.getElementById("gh-repos").textContent =
-            `Repos: ${stats.public_repos}`;
-
-          document.getElementById("gh-stars").textContent =
-            `Stars: ${stats.total_stars}`;
+          document.getElementById("gh-followers").textContent = `Followers: ${stats.followers}`;
+          document.getElementById("gh-repos").textContent = `Repos: ${stats.public_repos}`;
+          document.getElementById("gh-stars").textContent = `Stars: ${stats.total_stars}`;
         }
 
-        // ✅ Show avatar if exists
         const avatar = document.getElementById("gh-avatar");
         if (avatar && stats.avatar) {
           avatar.src = stats.avatar;
           avatar.style.display = "block";
         }
 
-        // ✅ Typewriter roast
         typeWriter(document.getElementById("roast-text"), data.roast);
       })
       .catch(() => {
@@ -187,12 +178,10 @@ serviceRoastButtons.forEach(button => {
       document.getElementById("roast-output").style.display = "block";
       document.getElementById("roast-text").textContent = "Roasting...";
 
-      fetch(`http://localhost:5000/valorant/${name}/${tag}?tone=${selectedTone}`)
+      fetch(`${API_URL}/valorant/${name}/${tag}?tone=${selectedTone}`)
         .then(async res => {
           const data = await res.json();
-
           if (!res.ok) throw new Error(data.error);
-
           return data;
         })
         .then(data => {
@@ -213,11 +202,9 @@ function typeWriter(element, text) {
     if (i < text.length) {
       element.textContent += text.charAt(i);
       i++;
-
       let speed = i < 80 ? 30 : 50;
       setTimeout(typing, speed);
     }
   }
-
   typing();
 }
